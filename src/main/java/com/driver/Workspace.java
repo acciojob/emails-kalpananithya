@@ -1,7 +1,10 @@
 package com.driver;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class Workspace extends Gmail {
@@ -23,29 +26,35 @@ public class Workspace extends Gmail {
     public int findMaxMeetings() {
 
 
-        int ct = 1;
-
-        for (int i = 0; i < calendar.size() - 1; i++) {
-
-            Meeting t1 = calendar.get(i);
-
-            for (int j = i; j < calendar.size() - 1; j++) {
+        ArrayList<Pair<LocalTime,Integer>> endmeet=new ArrayList<>();
 
 
+        for(int i=0;i<calendar.size();i++)
+        {
+            endmeet.add(Pair.of(calendar.get(i).getEndTime(),i));
 
-
-
-                    Meeting temp2;
-                    temp2 = calendar.get(j);
-
-                    if (temp2.getStartTime().isAfter(t1.getStartTime()) && temp2.getEndTime().isAfter(t1.getEndTime()))
-
-                        ct++;
-
-
-
-            }
         }
+        Collections.sort(endmeet);
+         int ct=1;
+        LocalTime end=endmeet.get(0).getLeft();
+
+        if(!endmeet.isEmpty())
+          ct+=1;
+
+        for(int j=1;j<calendar.size();j++)
+        {
+            if(calendar.get(endmeet.get(j).getRight()).getStartTime().compareTo(end)>0)
+
+            ct+=1;
+             end=endmeet.get(j).getLeft();
+
+        }
+
+
+
+
+
+
 
 
         // find the maximum number of meetings you can attend
