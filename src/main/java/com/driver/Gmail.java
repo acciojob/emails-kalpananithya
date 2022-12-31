@@ -60,7 +60,7 @@ public class Gmail extends Email {
         Mail delm = new Mail();
         // Each message is distinct
         // If the given message is found in any mail in the inbox, move the mail to trash, else do nothing
-        for (int i = 0; i < mail.size() - 1; i++) {
+        for (int i = 0; i < mail.size()-1; i++) {
             if (mail.get(i).getMessage().equals(message))
                 delm = mail.get(i);
 
@@ -111,7 +111,7 @@ public class Gmail extends Email {
 
             for(int i=0;i<mail.size();i++)
             {
-                if(mail.get(i).getDate().compareTo(start) >=0 && mail.get(i).getDate().compareTo(start) <=0 )
+                if(mail.get(i).getDate().compareTo(start) >=0 && mail.get(i).getDate().compareTo(end) <=0 )
                 count++;
 
             }
