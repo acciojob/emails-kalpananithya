@@ -1,13 +1,15 @@
 package com.driver;
 
+import org.apache.commons.lang3.tuple.Triple;
+
 import java.util.Date;
 import java.util.*;
 
 public class Gmail extends Email {
 
 
-    List<Mail> mail=new ArrayList<>();
-    List<Mail> trash=new ArrayList<>();
+    List<Mail> mail;
+    List<Mail> trash;
 
 
     int inboxCapacity; //maximum number of mails inbox can store
@@ -17,6 +19,8 @@ public class Gmail extends Email {
 
         super(emailId);
         this.inboxCapacity=inboxCapacity;
+        this.mail=new ArrayList<>();
+        this.trash=new ArrayList<>();
 
 
     }
@@ -28,31 +32,17 @@ public class Gmail extends Email {
     public void receiveMail(Date date, String sender, String message){
 
 
-      Mail email =new Mail(date,sender,message);
-        Date lat=null;
-        Mail m=null;
+         Mail email =new Mail(date,sender,message);
 
 
+            if(mail.size() == inboxCapacity) {
+                Mail old= mail.get(0);
 
+               mail.remove(old);
+                trash.add(old);
 
-            if(this.mail.size() > inboxCapacity) {
-
-                for (Mail d : this.mail) {
-                    if (lat == null || d.getDate().after(lat))
-
-                        lat = d.getDate();
-
-
-                    m = d;
-                }
-
-
-                trash.add(m);
-                this.mail.remove(m);
             }
                   this.mail.add(email);
-
-
 
             }
 
@@ -67,54 +57,33 @@ public class Gmail extends Email {
 
     public void deleteMail(String message) {
 
-
+        Mail delm = new Mail();
         // Each message is distinct
         // If the given message is found in any mail in the inbox, move the mail to trash, else do nothing
-        for (int i=0;i<mail.size()-1;i++)
-        {
-            Mail temp=mail.get(i);
+        for (int i = 0; i < mail.size() - 1; i++) {
+            if (mail.get(i).getMessage().equals(message))
+                delm = mail.get(i);
 
-            if (temp.getMessage().equals(message)) {
-                trash.add(temp);
-                mail.remove(temp);
-
+            if (delm != null) {
+                trash.add(delm);
+                mail.remove(delm);
             }
-        }
-    }
 
+
+        }
+
+    }
 
     public String findLatestMessage() {
         if (mail.size() == 0)
             return (null);
 
-        Mail m = mail.get(0);
-        Date r = m.getDate();
-        Mail res = null;
+          Mail m=mail.get(mail.size()-1);
 
-
-
-
-            for (int i = 1; i < mail.size() - 1; i++)
-            {
-                Mail temp = mail.get(i);
-                Date g = temp.getDate();
-                if (g.after(r))
-                {
-                    r = g;
-                    res = temp;
-                }
+            return (m.getMessage());
 
 
         }
-
-
-            return (res.getMessage());
-
-
-        }
-
-
-
 
         // If the inbox is empty, return null
         // Else, return the message of the latest mail present in the inbox
@@ -122,27 +91,17 @@ public class Gmail extends Email {
 
 
     public String findOldestMessage() {
-        Date r = null;
-        Mail temp = null;
-
         if (mail.size() == 0)
             return (null);
-        else {
 
 
-            for (Mail m : this.mail) {
-                Date g = m.getDate();
-                if (r == null || r.before(g))
-                    r = g;
-                temp = m;
+        Mail m=mail.get(0);
 
-            }
-
-            return (temp.getMessage());
+        return (m.getMessage());
             // If the inbox is empty, return null
             // Else, return the message of the oldest mail present in the inbox
 
-        }
+
     }
 
     public int findMailsBetweenDates(Date start, Date end){
@@ -150,13 +109,10 @@ public class Gmail extends Email {
         //It is guaranteed that start date <= end date
           int count=0;
 
-            for( Mail m: this.mail)
+            for(int i=0;i<mail.size();i++)
             {
-                Date g=m.getDate();
-
-                if(g.after(start)  || g.before(end))
-                    count++;
-
+                if(mail.get(i).getDate().compareTo(start) >=0 && mail.get(i).getDate().compareTo(start) <=0 )
+                count++;
 
             }
             return(count);
