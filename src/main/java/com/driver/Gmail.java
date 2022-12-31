@@ -31,18 +31,15 @@ public class Gmail extends Email {
 
     public void receiveMail(Date date, String sender, String message){
 
-
-         Mail email =new Mail(date,sender,message);
-
-
-            if(mail.size() == inboxCapacity) {
+            if(mail.size() == inboxCapacity)
+            {
                 Mail old= mail.get(0);
-
-               mail.remove(old);
+                mail.remove(old);
                 trash.add(old);
 
             }
-                  this.mail.add(email);
+           Mail email =new Mail(date,sender,message);
+            this.mail.add(email);
 
             }
 
@@ -57,22 +54,25 @@ public class Gmail extends Email {
 
     public void deleteMail(String message) {
 
-        Mail delm = new Mail();
+        Mail delm=null;
+        int ind=0;
         // Each message is distinct
         // If the given message is found in any mail in the inbox, move the mail to trash, else do nothing
-        for (int i = 0; i < mail.size()-1; i++) {
+        for (int i = 0; i < mail.size()-1; i++)
+        {
             if (mail.get(i).getMessage().equals(message))
-                delm = mail.get(i);
+                ind=i;
+        }
+            if (ind != 0) {
 
-            if (delm != null) {
-                trash.add(delm);
-                mail.remove(delm);
+                mail.remove(mail.get(ind));
+                trash.add(mail.get(ind));
             }
 
 
         }
 
-    }
+
 
     public String findLatestMessage() {
         if (mail.size() == 0)
@@ -98,7 +98,7 @@ public class Gmail extends Email {
         Mail m=mail.get(0);
 
         return (m.getMessage());
-            // If the inbox is empty, return null
+        // If the inbox is empty, return null
             // Else, return the message of the oldest mail present in the inbox
 
 
